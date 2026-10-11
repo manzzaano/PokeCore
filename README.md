@@ -1,131 +1,86 @@
 <div align="center">
-  <img src="public/pokecore-logo.png" alt="Pokédex Logo" width="360" />
-  
+  <img src="public/pokecore-logo.png" alt="PokeCore" width="360" />
+
   ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
   ![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite)
-  ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss)
-  ![TanStack Query](https://img.shields.io/badge/TanStack_Query-v5-FF4154?logo=reactquery)
-  ![Zustand](https://img.shields.io/badge/Zustand-state-8B5CF6)
-  ![Framer Motion](https://img.shields.io/badge/Framer_Motion-animations-0055FF?logo=framer)
-  
-  **Pokédex interactiva** con todos los Pokémon de todas las generaciones · 100% en español
+  ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss)
+  ![TanStack Query](https://img.shields.io/badge/TanStack_Query-5-FF4154?logo=reactquery)
+  ![Zustand](https://img.shields.io/badge/Zustand-5-8B5CF6)
+
+  **Pokédex de los 1025 Pokémon, en español y con carga instantánea.**
+  En producción en **[manzzaano.github.io/PokeCore](https://manzzaano.github.io/PokeCore/)**.
 </div>
 
 ---
 
-## Características
+## Qué hace
 
-<table>
-<tr>
-<td width="50%">
+- **Regiones:** de Kanto a Paldea, con los tres iniciales de cada generación como portada.
+- **Búsqueda** por nombre o número mientras escribes, y **filtro por los 18 tipos**.
+- **Ficha completa:** estadísticas, debilidades, habilidades (también las ocultas), peso y altura, género, descripción por versión del juego, cadena evolutiva, variantes, versión shiny y unos 600 movimientos en español.
+- **Favoritos** guardados en el navegador, sin cuentas ni servidor.
+- **Diseño adaptado a móvil:** barra lateral plegable y cuadrícula de 2 a 4 columnas.
 
-### Selección por región
-Elige entre **Kanto, Johto, Hoenn, Sinnoh, Teselia, Kalos, Alola, Galar y Paldea** con los 3 iniciales de cada generación como vista previa.
+## Cómo consigue ir rápida
 
-### Catálogo completo
-**1025 Pokémon** con búsqueda instantánea por nombre o número.
+La PokéAPI no está pensada para pedirlo todo a la vez, así que cada dato se pide una sola vez y en el momento útil:
 
-### Filtro por tipo
-**18 tipos** con colores dinámicos, nombres en español y pills interactivas.
+- **La lista de nombres se pide una vez** y TanStack Query la guarda una hora; la búsqueda filtra esa lista en el navegador, sin esperar a la red.
+- **El filtro por tipo** consulta la API la primera vez y guarda la respuesta 24 horas, porque los tipos no cambian.
+- **La ficha se pide antes del clic:** empieza a cargarse al pasar el ratón por la tarjeta y queda guardada media hora.
+- **Imágenes por fases:** `SpriteImg` muestra primero el sprite pequeño y lo cambia por la ilustración oficial cuando carga (si no existe, prueba con la de HOME).
+- **Todo en español sin peticiones extra:** tablas propias de movimientos, habilidades y efectividad de tipos.
+- **Favoritos sin frenar la interfaz:** se guardan en `localStorage` cuando el navegador está libre, con `requestIdleCallback`.
 
-### Favoritos persistentes
-Sidebar lateral con tus Pokémon favoritos guardados en `localStorage`.
+Las decisiones están contadas en el caso de estudio: [leosoftware.dev/sistemas/pokecore](https://leosoftware.dev/sistemas/pokecore).
 
-</td>
-<td width="50%">
+## Stack
 
-### Detalle completo
-Modal glass con **sprite oficial**, stats animadas, debilidades, habilidades (ocultas visibles), peso/altura, género, flavor text por versión, cadena evolutiva, variantes y movimientos (~600 en español).
-
-### Toggle shiny
-Icono pixel-art retro. Cascada de fallback: `official-artwork` → `home` → `front_default`.
-
-### Diseño responsive
-Mobile-first con sidebar colapsable, grid fluido (2→3→4 columnas) y tipografía escalable.
-
-### Animaciones suaves
-Transiciones entre regiones, evoluciones y modales con **Framer Motion**.
-
-</td>
-</tr>
-</table>
-
-## Tecnologías
-<div align="center">
-  
-| Tecnología | Uso |
+| | |
 |---|---|
-| **React 19** | UI declarativa con hooks |
-| **Vite 6** | Build tool ultrarrápido |
-| **Tailwind CSS v4** | Estilos utilitarios + tema oscuro |
-| **TanStack Query v5** | Caché, prefetch y fetching de datos |
-| **Zustand** | Estado global ligero |
-| **Framer Motion** | Animaciones fluidas |
-| **Lucide React** | Iconografía |
-| **PokéAPI** | Datos de Pokémon |
+| Interfaz | React 19, Tailwind CSS 4, Framer Motion, Lucide |
+| Datos | TanStack Query 5 sobre la [PokéAPI](https://pokeapi.co) |
+| Estado | Zustand (búsqueda, tipo y región elegidos) |
+| Build | Vite 6 |
+| Despliegue | GitHub Pages |
 
-</div>
-
-## Ejecución local
+## En local
 
 ```bash
-git clone https://github.com/manzzaano/POKEDEX.git
-cd POKEDEX
+git clone https://github.com/manzzaano/PokeCore.git
+cd PokeCore
 npm install
 npm run dev
+npm run lint     # ESLint
 ```
 
-## Desplegar en GitHub Pages
+## Despliegue
 
 ```bash
-npm run deploy
+npm run deploy   # compila y publica dist/ en la rama gh-pages
 ```
 
-> En **Settings → Pages** del repositorio, selecciona la rama `gh-pages` y la carpeta `/ (root)`.
+GitHub Pages sirve la rama `gh-pages` desde la raíz.
 
-## Estructura del proyecto
+## Estructura
 
 ```
 src/
-├── App.jsx                         # Layout: sidebar favs + header + grid + modal
-├── main.jsx                        # Entry point
-├── index.css                       # Tema oscuro + glows decorativos
-│
+├── App.jsx                      # barra de favoritos, cabecera, cuadrícula y ficha
 ├── components/
-│   ├── HomeScreen.jsx              # Selector visual de región
-│   ├── TypeFilter.jsx              # Filtro de tipos (18 botones)
-│   └── ui/
-│       ├── PokemonCard.jsx         # Tarjeta glass con sprite + fav
-│       ├── SpriteImg.jsx           # Imagen con fallback en cascada
-│       ├── StatBar.jsx             # Barras de stats animadas
-│       ├── TypeBadge.jsx           # Badge de tipo con color dinámico
-│       ├── GenderDisplay.jsx       # Indicador ♂ / ♀ / sin género
-│       ├── RetroHeart.jsx          # Corazón pixel-art 8×8
-│       ├── ShinyIcon.jsx           # Icono shiny pixel-art
-│       ├── CleanLogo.jsx           # Logo con procesado canvas
-│       └── Skeleton.jsx            # Skeleton loader animado
-│
-├── features/detail/
-│   ├── PokemonDetail.jsx           # Modal completo de detalle
-│   ├── EvolutionSection.jsx        # Cadena evolutiva horizontal
-│   └── FlavorTextSection.jsx       # Selector de flavor text por versión
-│
-├── hooks/
-│   ├── usePokemons.js              # Fetch paginado con filtro región
-│   ├── usePokemonDetail.js         # Fetch detalle individual
-│   ├── useFavorites.js             # Persistencia en localStorage
-│   └── useTypes.js                 # Lista de tipos desde la API
-│
-├── services/pokeApi.js             # Cliente HTTP para PokéAPI
-├── store/usePokedexStore.js        # Estado global con Zustand
-└── data/
-    ├── typeChart.js                # Matriz de efectividad 18×18
-    ├── moveNames.js                # Traducciones de movimientos
-    └── abilityNames.js             # Traducciones de habilidades
+│   ├── HomeScreen.jsx           # selector de región
+│   ├── TypeFilter.jsx           # filtro de los 18 tipos
+│   ├── ErrorBoundary.jsx        # recupera la interfaz si un componente falla
+│   └── ui/                      # tarjeta, SpriteImg, barras de stats, badges, skeleton...
+├── features/detail/             # ficha: detalle, evoluciones y descripciones por versión
+├── hooks/                       # usePokemons, usePokemonDetail, useTypes, useFavorites
+├── services/pokeApi.js          # cliente de la PokéAPI
+├── store/usePokedexStore.js     # estado global con Zustand
+└── data/                        # tabla de tipos y traducciones de movimientos y habilidades
 ```
 
 ---
 
 <div align="center">
-  <sub>Desarrollado por <strong>Ismael Manzano León</strong> · 1º DAM 2024-25</sub>
+  <sub>Hecho por <a href="https://leosoftware.dev">Ismael Manzano León</a> · proyecto propio durante 1.º de DAM (2024-25)</sub>
 </div>
